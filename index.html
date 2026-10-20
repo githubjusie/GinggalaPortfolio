@@ -207,8 +207,7 @@ h2{font:700 clamp(30px,4vw,43px)/1.12 var(--head);letter-spacing:-1.8px;margin:9
 
 .tags span{padding:5px 9px;border:1px solid #2a3b50;background:#111e2d;color:#c0cfdf;border-radius:5px;font:10px var(--mono)}
 
-/* ===== HERO ANIMATED BACKGROUND =====
-   Canvas sits behind the hero content; it never captures clicks or scrolling. */
+
 
 .hero-wrap{position:relative;overflow:hidden;isolation:isolate}
 
@@ -216,9 +215,7 @@ h2{font:700 clamp(30px,4vw,43px)/1.12 var(--head);letter-spacing:-1.8px;margin:9
 
 .hero-wrap .hero{z-index:1}
 
-/* ===== SECTION BACKGROUNDS =====
-   Each section gets its own layer. Layers sit behind content, never catch clicks,
-   and are clipped to their own section (no horizontal scrolling). */
+
 
 .section{position:relative;overflow:hidden;isolation:isolate}
 
@@ -228,7 +225,6 @@ h2{font:700 clamp(30px,4vw,43px)/1.12 var(--head);letter-spacing:-1.8px;margin:9
 
 canvas.bg{width:100%;height:100%;display:block}
 
-/* About: slow drifting orbs + gentle waves */
 .orb{position:absolute;border-radius:50%;will-change:transform}
 .o1{width:460px;height:460px;left:-120px;top:-100px;background:radial-gradient(circle,rgba(88,166,255,.17),transparent 66%);animation:orbA 26s ease-in-out infinite alternate}
 .o2{width:380px;height:380px;right:-90px;top:30%;background:radial-gradient(circle,rgba(101,214,164,.10),transparent 66%);animation:orbB 32s ease-in-out infinite alternate}
@@ -240,7 +236,6 @@ canvas.bg{width:100%;height:100%;display:block}
 @keyframes orbC{to{transform:translate(-120px,-70px) scale(1.1)}}
 @keyframes waveMove{to{transform:translateX(-50%)}}
 
-/* Toolkit: breathing grid + light trails running along the grid lines */
 .bg-skills{--g:rgba(88,166,255,.075);background-image:linear-gradient(var(--g) 1px,transparent 1px),linear-gradient(90deg,var(--g) 1px,transparent 1px);background-size:48px 48px;-webkit-mask-image:radial-gradient(ellipse at 50% 50%,#000 35%,transparent 88%);mask-image:radial-gradient(ellipse at 50% 50%,#000 35%,transparent 88%);animation:gridPulse 8s ease-in-out infinite}
 .trail{position:absolute;opacity:0}
 .trail.h{left:-220px;width:180px;height:1px;background:linear-gradient(90deg,transparent,rgba(88,166,255,.9));box-shadow:0 0 6px rgba(88,166,255,.5);animation:trailH 10s linear infinite}
@@ -249,7 +244,6 @@ canvas.bg{width:100%;height:100%;display:block}
 @keyframes trailH{0%{opacity:0;transform:translateX(0)}10%,90%{opacity:1}100%{opacity:0;transform:translateX(calc(100vw + 420px))}}
 @keyframes trailV{0%{opacity:0;transform:translateY(0)}10%,90%{opacity:1}100%{opacity:0;transform:translateY(800px)}}
 
-/* Contact: calm shifting gradient + softly rising glow dots */
 .bg-contact{background:linear-gradient(125deg,#0b1018 0%,#102a44 35%,#0c2230 65%,#0b1018 100%);background-size:300% 300%;animation:gradShift 28s ease-in-out infinite alternate}
 .glow{position:absolute;border-radius:50%;width:300px;height:300px;background:radial-gradient(circle,rgba(101,214,164,.10),transparent 68%);animation:bob 16s ease-in-out infinite alternate}
 .glow.g1{left:8%;top:12%}
@@ -263,7 +257,6 @@ canvas.bg{width:100%;height:100%;display:block}
 
 @media(prefers-reduced-motion:reduce){.bg,.bg *{animation:none!important}.trail,.fly{display:none}}
 
-/* ===== CONTACT LAYOUT: centered intro + terminal card ===== */
 
 .contact-wrap{display:flex;flex-direction:column;align-items:center;text-align:center}
 
@@ -307,10 +300,7 @@ canvas.bg{width:100%;height:100%;display:block}
 
 @media(prefers-reduced-motion:reduce){.cursor{animation:none}}
 
-/* ===== PROJECT CARDS =====
-   Each card is a 2-column grid: screenshot (left) + project content (right).
-   The screenshot lives in its own .project-media box, so it can no longer
-   fall into a narrow grid column and shrink. */
+
 
 .projects{display:grid;gap:14px}
 
@@ -408,7 +398,7 @@ footer a{color:var(--blue)}
 
 
 
-/* Logos appear only on the Home page */
+
 header.institution-logos {
     position: absolute;
     top: 25px;
@@ -553,7 +543,7 @@ header.institution-logos img.institution-logo {
 </head>
 
 <body>
-<!-- SCHOOL AND IT DEPARTMENT LOGOS -->
+
 <header class="institution-logos">
     <img src="logo/cec.png"
          alt="School Logo"
@@ -576,7 +566,7 @@ header.institution-logos img.institution-logo {
 
     </a>
 
-    <div class="nav-label">NAVIGATION</div>
+    <div class="nav-label">FIND YOUR WAY</div>
 
     <nav id="nav" aria-label="Main navigation">
 
@@ -584,7 +574,7 @@ header.institution-logos img.institution-logo {
 
       <a href="#about"><span class="nav-num"></span> About me</a>
 
-      <a href="#skills"><span class="nav-num"></span> My toolkit</a>
+      <a href="#skills"><span class="nav-num"></span> My Skill Set</a>
 
       <a href="#projects"><span class="nav-num"></span> Projects</a>
 
@@ -684,7 +674,7 @@ header.institution-logos img.institution-logo {
 
       <div class="container">
 
-        <div class="section-heading reveal"><div><div class="section-index">02 — MY TOOLKIT</div><h2>Things I work with<br>and keep learning.</h2></div><p>These technologies are connected to my academic projects. My experience continues to grow as I practice.</p></div>
+        <div class="section-heading reveal"><div><div class="section-index">02 — MY SKILL SET</div><h2>Things I work with<br>and keep learning.</h2></div><p>These technologies are connected to my academic projects. My experience continues to grow as I practice.</p></div>
 
         <div class="skill-list">
 
@@ -712,7 +702,7 @@ header.institution-logos img.institution-logo {
 
         <div class="projects">
 
-          <!-- PROJECT 01 -->
+        
           <article class="project reveal">
 
             <div class="project-media" data-missing="Screenshot not found: image/kcs.jpg">
@@ -734,7 +724,7 @@ header.institution-logos img.institution-logo {
 
           </article>
 
-          <!-- PROJECT 02 -->
+          
           <article class="project reveal">
 
             <div class="project-media" data-missing="Add your screenshot as image/echospeech.jpg">
@@ -756,7 +746,7 @@ header.institution-logos img.institution-logo {
 
           </article>
 
-          <!-- PROJECT 03 -->
+          
           <article class="project reveal">
 
             <div class="project-media" data-missing="Add your screenshot as image/mystic-quest.jpg">
@@ -778,7 +768,7 @@ header.institution-logos img.institution-logo {
 
           </article>
 
-          <!-- PROJECT 04 -->
+          
           <article class="project reveal">
 
             <div class="project-media" data-missing="Add your screenshot as image/raco.jpg">
@@ -849,7 +839,7 @@ header.institution-logos img.institution-logo {
 
 </div>
 
-<!-- PROJECT POPUP (placed before the script so every element exists when the script runs) -->
+
 <div class="project-modal" id="projectModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="project-modal-content">
         <button type="button" class="modal-close" id="modalClose" aria-label="Close project details">&times;</button>
@@ -909,7 +899,6 @@ document.getElementById('year').textContent=new Date().getFullYear();
 window.addEventListener('resize',updateMobileMenu);updateMobileMenu();
 
 
-// PROJECT IMAGE POPUP
 document.addEventListener('DOMContentLoaded', function () {
     var modal = document.getElementById('projectModal');
     var closeBtn = document.getElementById('modalClose');
@@ -981,7 +970,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// HERO PARTICLE BACKGROUND
+// PARA SA HERO PARTICLE BACKGROUND
 (function () {
     var wrap = document.getElementById('heroWrap');
     var canvas = document.getElementById('heroBg');
@@ -1081,7 +1070,7 @@ document.addEventListener('DOMContentLoaded', function () {
         raf = requestAnimationFrame(step);
     }
 
-    // Run only when motion is allowed, the hero is on screen, and the tab is visible
+    
     function update() {
         var shouldRun = !motionQuery.matches && inView && !document.hidden;
         if (shouldRun && !raf) {
@@ -1122,7 +1111,7 @@ document.addEventListener('DOMContentLoaded', function () {
 })();
 
 
-// PROJECTS NETWORK BACKGROUND
+
 (function () {
     var canvas = document.getElementById('netBg');
     if (!canvas || !canvas.getContext) return;
