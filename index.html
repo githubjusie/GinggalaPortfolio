@@ -207,6 +207,62 @@ h2{font:700 clamp(30px,4vw,43px)/1.12 var(--head);letter-spacing:-1.8px;margin:9
 
 .tags span{padding:5px 9px;border:1px solid #2a3b50;background:#111e2d;color:#c0cfdf;border-radius:5px;font:10px var(--mono)}
 
+/* ===== HERO ANIMATED BACKGROUND =====
+   Canvas sits behind the hero content; it never captures clicks or scrolling. */
+
+.hero-wrap{position:relative;overflow:hidden;isolation:isolate}
+
+.hero-bg{position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block;pointer-events:none;-webkit-mask-image:linear-gradient(#000 78%,transparent);mask-image:linear-gradient(#000 78%,transparent)}
+
+.hero-wrap .hero{z-index:1}
+
+/* ===== SECTION BACKGROUNDS =====
+   Each section gets its own layer. Layers sit behind content, never catch clicks,
+   and are clipped to their own section (no horizontal scrolling). */
+
+.section{position:relative;overflow:hidden;isolation:isolate}
+
+.section>.container{position:relative;z-index:1}
+
+.bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+
+canvas.bg{width:100%;height:100%;display:block}
+
+/* About: slow drifting orbs + gentle waves */
+.orb{position:absolute;border-radius:50%;will-change:transform}
+.o1{width:460px;height:460px;left:-120px;top:-100px;background:radial-gradient(circle,rgba(88,166,255,.17),transparent 66%);animation:orbA 26s ease-in-out infinite alternate}
+.o2{width:380px;height:380px;right:-90px;top:30%;background:radial-gradient(circle,rgba(101,214,164,.10),transparent 66%);animation:orbB 32s ease-in-out infinite alternate}
+.o3{width:320px;height:320px;left:35%;bottom:-120px;background:radial-gradient(circle,rgba(139,196,255,.11),transparent 66%);animation:orbC 29s ease-in-out infinite alternate}
+.wave{position:absolute;left:0;bottom:0;width:200%;height:130px;animation:waveMove 48s linear infinite}
+.wave.w2{height:100px;opacity:.7;animation-duration:70s;animation-direction:reverse}
+@keyframes orbA{to{transform:translate(160px,120px) scale(1.15)}}
+@keyframes orbB{to{transform:translate(-140px,-90px) scale(1.2)}}
+@keyframes orbC{to{transform:translate(-120px,-70px) scale(1.1)}}
+@keyframes waveMove{to{transform:translateX(-50%)}}
+
+/* Toolkit: breathing grid + light trails running along the grid lines */
+.bg-skills{--g:rgba(88,166,255,.075);background-image:linear-gradient(var(--g) 1px,transparent 1px),linear-gradient(90deg,var(--g) 1px,transparent 1px);background-size:48px 48px;-webkit-mask-image:radial-gradient(ellipse at 50% 50%,#000 35%,transparent 88%);mask-image:radial-gradient(ellipse at 50% 50%,#000 35%,transparent 88%);animation:gridPulse 8s ease-in-out infinite}
+.trail{position:absolute;opacity:0}
+.trail.h{left:-220px;width:180px;height:1px;background:linear-gradient(90deg,transparent,rgba(88,166,255,.9));box-shadow:0 0 6px rgba(88,166,255,.5);animation:trailH 10s linear infinite}
+.trail.v{top:-200px;width:1px;height:150px;background:linear-gradient(transparent,rgba(101,214,164,.9));box-shadow:0 0 6px rgba(101,214,164,.45);animation:trailV 12s linear infinite}
+@keyframes gridPulse{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes trailH{0%{opacity:0;transform:translateX(0)}10%,90%{opacity:1}100%{opacity:0;transform:translateX(calc(100vw + 420px))}}
+@keyframes trailV{0%{opacity:0;transform:translateY(0)}10%,90%{opacity:1}100%{opacity:0;transform:translateY(800px)}}
+
+/* Contact: calm shifting gradient + softly rising glow dots */
+.bg-contact{background:linear-gradient(125deg,#0b1018 0%,#102a44 35%,#0c2230 65%,#0b1018 100%);background-size:300% 300%;animation:gradShift 28s ease-in-out infinite alternate}
+.glow{position:absolute;border-radius:50%;width:300px;height:300px;background:radial-gradient(circle,rgba(101,214,164,.10),transparent 68%);animation:bob 16s ease-in-out infinite alternate}
+.glow.g1{left:8%;top:12%}
+.glow.g2{right:6%;bottom:6%;background:radial-gradient(circle,rgba(88,166,255,.14),transparent 68%);animation-duration:21s}
+.fly{position:absolute;bottom:-30px;left:var(--x);width:var(--s);height:var(--s);border-radius:50%;background:rgba(139,196,255,.9);box-shadow:0 0 12px 3px rgba(88,166,255,.35);opacity:0;animation:rise var(--d) ease-in-out var(--l) infinite}
+@keyframes gradShift{to{background-position:100% 100%}}
+@keyframes bob{to{transform:translate(40px,-34px) scale(1.12)}}
+@keyframes rise{0%{opacity:0;transform:translate(0,0)}15%{opacity:.7}85%{opacity:.45}100%{opacity:0;transform:translate(var(--dx),-520px)}}
+
+@media(max-width:720px){.o3,.wave.w2,.trail:nth-child(n+4),.fly:nth-child(n+6){display:none}.o1{width:320px;height:320px}.o2{width:260px;height:260px}}
+
+@media(prefers-reduced-motion:reduce){.bg,.bg *{animation:none!important}.trail,.fly{display:none}}
+
 /* ===== PROJECT CARDS =====
    Each card is a 2-column grid: screenshot (left) + project content (right).
    The screenshot lives in its own .project-media box, so it can no longer
@@ -522,6 +578,10 @@ header.institution-logos img.institution-logo {
 
   <main>
 
+    <div class="hero-wrap" id="heroWrap">
+
+    <canvas class="hero-bg" id="heroBg" aria-hidden="true"></canvas>
+
     <section class="hero container" id="home">
 
       <div class="hero-copy reveal">
@@ -544,9 +604,13 @@ header.institution-logos img.institution-logo {
 
     </section>
 
+    </div>
+
 
 
     <section class="section" id="about">
+
+    <div class="bg bg-about" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span><svg class="wave w1" viewBox="0 0 2400 120" preserveAspectRatio="none"><path fill="rgba(88,166,255,.06)" d="M0 60C150 20 350 100 600 60S1050 100 1200 60C1350 20 1550 100 1800 60S2250 100 2400 60V120H0Z"/></svg><svg class="wave w2" viewBox="0 0 2400 120" preserveAspectRatio="none"><path fill="rgba(101,214,164,.05)" d="M0 60C150 20 350 100 600 60S1050 100 1200 60C1350 20 1550 100 1800 60S2250 100 2400 60V120H0Z"/></svg></div>
 
       <div class="container">
 
@@ -586,6 +650,8 @@ header.institution-logos img.institution-logo {
 
     <section class="section" id="skills">
 
+    <div class="bg bg-skills" aria-hidden="true"><span class="trail h" style="top:96px;animation-delay:0s"></span><span class="trail h" style="top:288px;animation-delay:3.5s"></span><span class="trail h" style="top:432px;animation-delay:7s"></span><span class="trail v" style="left:144px;animation-delay:1.5s"></span><span class="trail v" style="left:480px;animation-delay:5s"></span></div>
+
       <div class="container">
 
         <div class="section-heading reveal"><div><div class="section-index">02 — MY TOOLKIT</div><h2>Things I work with<br>and keep learning.</h2></div><p>These technologies are connected to my academic projects. My experience continues to grow as I practice.</p></div>
@@ -607,6 +673,8 @@ header.institution-logos img.institution-logo {
 
 
     <section class="section" id="projects">
+
+    <canvas class="bg" id="netBg" aria-hidden="true"></canvas>
 
       <div class="container">
 
@@ -640,7 +708,7 @@ header.institution-logos img.institution-logo {
           <article class="project reveal">
 
             <div class="project-media" data-missing="Add your screenshot as image/echospeech.jpg">
-              <img src="image/echospeech.png"
+              <img src="image/echospeech.jpg"
                    alt="EchoSpeech screenshot"
                    class="project-image"
                    tabindex="0"
@@ -662,7 +730,7 @@ header.institution-logos img.institution-logo {
           <article class="project reveal">
 
             <div class="project-media" data-missing="Add your screenshot as image/mystic-quest.jpg">
-              <img src="image/mysticquest.png"
+              <img src="image/mystic-quest.jpg"
                    alt="Mystic Quest screenshot"
                    class="project-image"
                    tabindex="0"
@@ -684,7 +752,7 @@ header.institution-logos img.institution-logo {
           <article class="project reveal">
 
             <div class="project-media" data-missing="Add your screenshot as image/raco.jpg">
-              <img src="image/racos.jpg"
+              <img src="image/raco.jpg"
                    alt="RACO — Rent a Car Online screenshot"
                    class="project-image"
                    tabindex="0"
@@ -710,6 +778,8 @@ header.institution-logos img.institution-logo {
 
 
     <section class="section" id="contact">
+
+    <div class="bg bg-contact" aria-hidden="true"><span class="glow g1"></span><span class="glow g2"></span><span class="fly" style="--x:10%;--s:4px;--d:17s;--l:0s;--dx:30px"></span><span class="fly" style="--x:26%;--s:3px;--d:21s;--l:4s;--dx:-25px"></span><span class="fly" style="--x:45%;--s:5px;--d:19s;--l:8s;--dx:20px"></span><span class="fly" style="--x:62%;--s:3px;--d:23s;--l:2s;--dx:-30px"></span><span class="fly" style="--x:78%;--s:4px;--d:18s;--l:6s;--dx:25px"></span><span class="fly" style="--x:90%;--s:3px;--d:22s;--l:10s;--dx:-20px"></span></div>
 
       <div class="container">
 
@@ -862,6 +932,276 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.key === 'Escape') closeProject();
     });
 });
+
+// HERO PARTICLE BACKGROUND
+(function () {
+    var wrap = document.getElementById('heroWrap');
+    var canvas = document.getElementById('heroBg');
+    if (!wrap || !canvas || !canvas.getContext) return;
+
+    var ctx = canvas.getContext('2d');
+    var motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var rgbList = ['88,166,255', '139,196,255', '101,214,164'];
+    var sprites = rgbList.map(makeSprite);
+    var particles = [];
+    var w = 0, h = 0, raf = 0, last = 0, inView = true, resizeTimer = 0;
+
+    // Pre-drawn soft glow dot (much cheaper than shadowBlur every frame)
+    function makeSprite(rgb) {
+        var s = document.createElement('canvas');
+        s.width = s.height = 64;
+        var c = s.getContext('2d');
+        var g = c.createRadialGradient(32, 32, 0, 32, 32, 32);
+        g.addColorStop(0, 'rgba(' + rgb + ',1)');
+        g.addColorStop(0.25, 'rgba(' + rgb + ',0.5)');
+        g.addColorStop(1, 'rgba(' + rgb + ',0)');
+        c.fillStyle = g;
+        c.fillRect(0, 0, 64, 64);
+        return s;
+    }
+
+    function setup() {
+        var rect = wrap.getBoundingClientRect();
+        w = Math.max(1, Math.round(rect.width));
+        h = Math.max(1, Math.round(rect.height));
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        var count = Math.round(Math.min(w < 720 ? 30 : 64, (w * h) / 16000));
+        particles = [];
+        for (var i = 0; i < count; i++) {
+            particles.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                vx: (Math.random() - 0.5) * 14,
+                vy: (Math.random() - 0.5) * 14,
+                r: 1.2 + Math.random() * 1.8,
+                c: Math.floor(Math.random() * sprites.length),
+                a: 0.35 + Math.random() * 0.45,
+                p: Math.random() * Math.PI * 2
+            });
+        }
+        draw(performance.now());
+    }
+
+    function draw(t) {
+        ctx.clearRect(0, 0, w, h);
+        var maxDist = w < 720 ? 85 : 125;
+        var max2 = maxDist * maxDist;
+        var i, j, a, b, dx, dy, d2;
+
+        ctx.lineWidth = 1;
+        for (i = 0; i < particles.length; i++) {
+            a = particles[i];
+            for (j = i + 1; j < particles.length; j++) {
+                b = particles[j];
+                dx = a.x - b.x;
+                dy = a.y - b.y;
+                d2 = dx * dx + dy * dy;
+                if (d2 < max2) {
+                    ctx.strokeStyle = 'rgba(88,166,255,' + ((1 - Math.sqrt(d2) / maxDist) * 0.13).toFixed(3) + ')';
+                    ctx.beginPath();
+                    ctx.moveTo(a.x, a.y);
+                    ctx.lineTo(b.x, b.y);
+                    ctx.stroke();
+                }
+            }
+        }
+
+        for (i = 0; i < particles.length; i++) {
+            a = particles[i];
+            var size = a.r * 9;
+            ctx.globalAlpha = a.a * (0.7 + 0.3 * Math.sin(t * 0.0008 + a.p));
+            ctx.drawImage(sprites[a.c], a.x - size / 2, a.y - size / 2, size, size);
+        }
+        ctx.globalAlpha = 1;
+    }
+
+    function step(ts) {
+        var dt = Math.min(ts - (last || ts), 50) / 1000;
+        last = ts;
+        for (var i = 0; i < particles.length; i++) {
+            var p = particles[i];
+            p.x += p.vx * dt;
+            p.y += p.vy * dt;
+            if (p.x < -10) p.x = w + 10; else if (p.x > w + 10) p.x = -10;
+            if (p.y < -10) p.y = h + 10; else if (p.y > h + 10) p.y = -10;
+        }
+        draw(ts);
+        raf = requestAnimationFrame(step);
+    }
+
+    // Run only when motion is allowed, the hero is on screen, and the tab is visible
+    function update() {
+        var shouldRun = !motionQuery.matches && inView && !document.hidden;
+        if (shouldRun && !raf) {
+            last = 0;
+            raf = requestAnimationFrame(step);
+        } else if (!shouldRun && raf) {
+            cancelAnimationFrame(raf);
+            raf = 0;
+        }
+    }
+
+    function onResize() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(setup, 150);
+    }
+
+    setup();
+    update();
+
+    if ('ResizeObserver' in window) {
+        new ResizeObserver(onResize).observe(wrap);
+    } else {
+        window.addEventListener('resize', onResize);
+    }
+
+    if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+            inView = entries[0].isIntersecting;
+            update();
+        }).observe(wrap);
+    }
+
+    document.addEventListener('visibilitychange', update);
+
+    // Reduced motion: keep one still frame, no animation
+    if (motionQuery.addEventListener) motionQuery.addEventListener('change', update);
+    else if (motionQuery.addListener) motionQuery.addListener(update);
+})();
+
+
+// PROJECTS NETWORK BACKGROUND
+(function () {
+    var canvas = document.getElementById('netBg');
+    if (!canvas || !canvas.getContext) return;
+
+    var host = canvas.parentNode;
+    var ctx = canvas.getContext('2d');
+    var motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var nodes = [];
+    var w = 0, h = 0, raf = 0, last = 0, inView = false, resizeTimer = 0;
+
+    function setup() {
+        var rect = host.getBoundingClientRect();
+        w = Math.max(1, Math.round(rect.width));
+        h = Math.max(1, Math.round(rect.height));
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        var count = Math.round(Math.min(w < 720 ? 24 : 52, (w * h) / 24000));
+        nodes = [];
+        for (var i = 0; i < count; i++) {
+            var hub = i % 7 === 0;
+            nodes.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                vx: (Math.random() - 0.5) * 9,
+                vy: (Math.random() - 0.5) * 9,
+                r: hub ? 3.2 : 1.6 + Math.random() * 0.8,
+                hub: hub
+            });
+        }
+        draw(performance.now());
+    }
+
+    function draw(t) {
+        ctx.clearRect(0, 0, w, h);
+        var maxDist = w < 720 ? 110 : 150;
+        var max2 = maxDist * maxDist;
+        var i, j, a, b, dx, dy, d2;
+
+        ctx.lineWidth = 1;
+        for (i = 0; i < nodes.length; i++) {
+            a = nodes[i];
+            for (j = i + 1; j < nodes.length; j++) {
+                b = nodes[j];
+                dx = a.x - b.x;
+                dy = a.y - b.y;
+                d2 = dx * dx + dy * dy;
+                if (d2 < max2) {
+                    ctx.strokeStyle = 'rgba(88,166,255,' + ((1 - Math.sqrt(d2) / maxDist) * 0.2).toFixed(3) + ')';
+                    ctx.beginPath();
+                    ctx.moveTo(a.x, a.y);
+                    ctx.lineTo(b.x, b.y);
+                    ctx.stroke();
+                }
+            }
+        }
+
+        for (i = 0; i < nodes.length; i++) {
+            a = nodes[i];
+            ctx.fillStyle = a.hub ? 'rgba(139,196,255,0.8)' : 'rgba(139,196,255,0.5)';
+            ctx.beginPath();
+            ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2);
+            ctx.fill();
+            if (a.hub) {
+                ctx.strokeStyle = 'rgba(88,166,255,' + (0.14 + 0.1 * Math.sin(t * 0.0012 + i)).toFixed(3) + ')';
+                ctx.beginPath();
+                ctx.arc(a.x, a.y, 9, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+        }
+    }
+
+    function step(ts) {
+        var dt = Math.min(ts - (last || ts), 50) / 1000;
+        last = ts;
+        for (var i = 0; i < nodes.length; i++) {
+            var n = nodes[i];
+            n.x += n.vx * dt;
+            n.y += n.vy * dt;
+            if (n.x < 0 || n.x > w) n.vx = -n.vx;
+            if (n.y < 0 || n.y > h) n.vy = -n.vy;
+        }
+        draw(ts);
+        raf = requestAnimationFrame(step);
+    }
+
+    function update() {
+        var shouldRun = !motionQuery.matches && inView && !document.hidden;
+        if (shouldRun && !raf) {
+            last = 0;
+            raf = requestAnimationFrame(step);
+        } else if (!shouldRun && raf) {
+            cancelAnimationFrame(raf);
+            raf = 0;
+        }
+    }
+
+    function onResize() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(setup, 150);
+    }
+
+    setup();
+
+    if ('ResizeObserver' in window) {
+        new ResizeObserver(onResize).observe(host);
+    } else {
+        window.addEventListener('resize', onResize);
+    }
+
+    if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+            inView = entries[0].isIntersecting;
+            update();
+        }).observe(host);
+    } else {
+        inView = true;
+        update();
+    }
+
+    document.addEventListener('visibilitychange', update);
+
+    if (motionQuery.addEventListener) motionQuery.addEventListener('change', update);
+    else if (motionQuery.addListener) motionQuery.addListener(update);
+})();
 
 </script>
 
